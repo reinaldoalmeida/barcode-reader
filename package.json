@@ -1,0 +1,26 @@
+{
+  "name": "barcode-reader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "prestart": "npm i",
+    "dev": "nodemon --inspect src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reinaldoalmeida/barcode.git"
+  },
+  "author": "Reinaldo Almeida",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/reinaldoalmeida/barcode/issues"
+  },
+  "homepage": "https://github.com/reinaldoalmeida/barcode#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "javascript-barcode-reader": "^0.6.8",
+    "nodemon": "^2.0.7"
+  }
+}
