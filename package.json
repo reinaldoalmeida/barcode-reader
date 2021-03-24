@@ -20,6 +20,7 @@
   "homepage": "https://github.com/reinaldoalmeida/barcode#readme",
   "dependencies": {
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "javascript-barcode-reader": "^0.6.8",
     "nodemon": "^2.0.7"
   }
