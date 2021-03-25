@@ -8,5 +8,5 @@ app.use(express.urlencoded({ extended: false }));
 app.use(routes);
 
 app.listen(3000, () => {
-    console.log("==== BarCode Reader ====");
+    console.log("==== BarCode Reader v1 ====");
 });
