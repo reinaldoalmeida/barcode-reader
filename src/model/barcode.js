@@ -1,6 +1,6 @@
-const { javascriptBarcodeReader } = require("javascript-barcode-reader");
+const javascriptBarcodeReader = require("javascript-barcode-reader");
 module.exports.processBarCode = async function processBarCode(image) {
-    javascriptBarcodeReader({
+    return await javascriptBarcodeReader({
         /* Image file Path || {data: Uint8ClampedArray, width, height} || HTML5 Canvas ImageData */
         image: image,
         barcode: "code-93",
