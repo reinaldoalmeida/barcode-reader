@@ -9,19 +9,25 @@ module.exports = {
             return res.status(404).send({ error: "Image is not defined" });
 
         let barcodeTypeList = ["ean_reader"];
-        if (barcodeType) barcodeTypeList.push(barcodeType);
+        if (barcodeType) {
+            barcodeTypeList.pop();
+            barcodeTypeList.push(barcodeType);
+        }
 
         const fileDownloaded = await download.barcodeDownload(image);
         if (!fileDownloaded)
             return res.status(500).send({ error: "BarCode read failed" });
 
-        const code = reader.barcodeReader(fileDownloaded, barcodeTypeList);
+        const code = await reader.barcodeReader(
+            fileDownloaded,
+            barcodeTypeList
+        );
+        if (!code)
+            return res.status(500).send({ error: "BarCode read failed" });
+
         code.then((code) => {
             remove.barcodeRemove(fileDownloaded);
             return res.status(200).send({ barcode: code });
-        }).catch((err) => {
-            console.log(`[ERROR][500][BarCodeController] => ${err}`);
-            return res.status(500).send({ error: "BarCode read failed" });
         });
     },
 };

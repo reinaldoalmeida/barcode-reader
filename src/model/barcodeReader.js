@@ -33,7 +33,7 @@ module.exports.barcodeReader = async (image, type) => {
             if (result.codeResult) {
                 return result.codeResult.code;
             } else {
-                console.log("[ERROR][500][barcodeReader]");
+                console.log("[ERROR][500][barcodeReader]", image, type);
                 return false;
             }
         }
