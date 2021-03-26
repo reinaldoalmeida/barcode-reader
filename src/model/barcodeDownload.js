@@ -9,16 +9,17 @@ module.exports.barcodeDownload = async (uri) => {
     return await fetch(uri, { method: "GET" }).then((res) => {
         if (res.ok) {
             //console.log(res.url);
-            // make file name
+            // make directory and file name
             const randomName = uuidv4();
             const contentType = res.headers.get("Content-Type");
             const extension = extName.mime(contentType)[0].ext;
             const filename = `${randomName}.${extension}`;
-            const imagePathDest = path.join(
-                process.cwd(),
-                "barcodes",
-                filename
-            );
+            const dir = path.join(process.cwd(), "barcodes");
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir);
+            }
+            const imagePathDest = path.join(dir, filename);
+
             // create local image
             const fileStream = fs.createWriteStream(imagePathDest);
             const fileCreated = new Promise((resolve, reject) => {
@@ -30,7 +31,7 @@ module.exports.barcodeDownload = async (uri) => {
                     resolve(true);
                 });
             });
-
+            //
             return fileCreated
                 .then(() => {
                     return imagePathDest;
