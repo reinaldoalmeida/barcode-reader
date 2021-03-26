@@ -30,10 +30,14 @@ module.exports.barcodeReader = async (image) => {
                     {
                         format: "ean_reader",
                         config: {
-                            supplements: ["ean_13_reader"],
+                            supplements: [
+                                "ean_13_reader",
+                                "ean_5_reader",
+                                "ean_2_reader",
+                            ],
                         },
                     },
-                ], // List of active readers
+                ],
             },
         },
         (result) => {
