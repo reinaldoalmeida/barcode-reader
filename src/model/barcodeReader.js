@@ -17,7 +17,7 @@ const Quagga = require("quagga").default;
     code_93_reader
 */
 
-module.exports.barcodeReader = async (image, type) => {
+module.exports.barcodeReader = async (image) => {
     return await Quagga.decodeSingle(
         {
             src: image,
@@ -26,14 +26,21 @@ module.exports.barcodeReader = async (image, type) => {
                 size: 800, // restrict input-size to be 800px in width (long-side)
             },
             decoder: {
-                readers: type, // List of active readers
+                readers: [
+                    {
+                        format: "ean_reader",
+                        config: {
+                            supplements: ["ean_13_reader"],
+                        },
+                    },
+                ], // List of active readers
             },
         },
         (result) => {
             if (result.codeResult) {
                 return result.codeResult.code;
             } else {
-                console.log("[ERROR][500][barcodeReader]", image, type);
+                console.log("[ERROR][500][barcodeReader]", image);
                 return false;
             }
         }
