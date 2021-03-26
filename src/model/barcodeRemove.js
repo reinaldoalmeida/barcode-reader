@@ -1,5 +1,5 @@
 const fs = require("fs");
-module.exports.removeBarCode = async (dest) => {
+module.exports.barcodeRemove = async (dest) => {
     return fs.unlink(dest, function (err) {
         if (err && err.code == "ENOENT") {
             // file doens't exist

@@ -1,5 +1,5 @@
 const javascriptBarcodeReader = require("javascript-barcode-reader");
-module.exports.processBarCode = async function processBarCode(image) {
+module.exports.barcodeReader = async (image) => {
     return await javascriptBarcodeReader({
         /* Image file Path || {data: Uint8ClampedArray, width, height} || HTML5 Canvas ImageData */
         image: image,
@@ -11,11 +11,10 @@ module.exports.processBarCode = async function processBarCode(image) {
         },
     })
         .then((code) => {
-            console.log(code);
             return code;
         })
         .catch((err) => {
-            console.log(err);
+            console.log(`[ERROR][500][javascriptBarcodeReader] => ${err}`);
             return false;
         });
 };
