@@ -31,6 +31,7 @@ module.exports.barcodeReader = async (image) => {
         })
         .catch((err) => {
             console.error(err);
+            return false;
         });
 
     let pixels = [];
@@ -53,22 +54,20 @@ module.exports.barcodeReader = async (image) => {
     hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
     const reader = new MultiFormatReader();
     reader.setHints(hints);
-
     const luminanceSource = new RGBLuminanceSource(
         Int32Array.from(pixels),
         bmp.bitmap.width,
         bmp.bitmap.height
     );
-
     const binaryBitmap = new BinaryBitmap(new HybridBinarizer(luminanceSource));
 
+    // remove bitmap image
+    fs.unlink(imagePathDest, () => {});
+
+    // return de barcode text
     try {
-        const result = reader.decode(binaryBitmap);
-        fs.unlink(imagePathDest, () => {});
-        return result;
-    } catch (err) {
-        console.log(`[ERROR][500][barcodeReader => ${err}`);
-        fs.unlink(imagePathDest, () => {});
+        return reader.decode(binaryBitmap);
+    } catch {
         return false;
     }
 };
