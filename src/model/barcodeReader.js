@@ -1,48 +1,74 @@
-const Quagga = require("quagga").default;
-/**
- * 
- * Barcode Decoders
- * 
- * 
-    code_128_reader (default)
-    ean_reader
-    ean_8_reader
-    code_39_reader
-    code_39_vin_reader
-    codabar_reader
-    upc_reader
-    upc_e_reader
-    i2of5_reader
-    2of5_reader
-    code_93_reader
-*/
+const fs = require("fs");
+const path = require("path");
+const process = require("process");
+const { v4: uuidv4 } = require("uuid");
+const Jimp = require("jimp");
+const {
+    BinaryBitmap,
+    RGBLuminanceSource,
+    HybridBinarizer,
+    DecodeHintType,
+    MultiFormatReader,
+    BarcodeFormat,
+} = require("@zxing/library");
 
 module.exports.barcodeReader = async (image) => {
-    return await Quagga.decodeSingle(
-        {
-            src: image,
-            numOfWorkers: 0, // Needs to be 0 when used within node
-            inputStream: {
-                size: 800, // restrict input-size to be 800px in width (long-side)
-            },
-            decoder: {
-                readers: ["code_128_reader"],
-                debug: {
-                    drawBoundingBox: false,
-                    showFrequency: false,
-                    drawScanline: false,
-                    showPattern: false,
-                },
-                multiple: false,
-            },
-        },
-        (result) => {
-            if (result.codeResult) {
-                return result.codeResult.code;
-            } else {
-                console.log("[ERROR][500][barcodeReader]", image);
-                return false;
-            }
-        }
+    // make directory and file name
+    const randomName = uuidv4();
+    const filename = `${randomName}.bmp`;
+    const dir = path.join(process.cwd(), "barcodes");
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+    }
+    const imagePathDest = path.join(dir, filename);
+
+    // convert image to bitmap
+    const bmp = await Jimp.read(image)
+        .then((bmp) => {
+            return bmp
+                .greyscale() // set greyscale
+                .write(imagePathDest); // save
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+
+    let pixels = [];
+    for (let p = 0; p < bmp.bitmap.width * bmp.bitmap.height * 4; p += 4) {
+        const r = bmp.bitmap.data[p];
+        const g = bmp.bitmap.data[p + 1];
+        const b = bmp.bitmap.data[p + 2];
+        const a = bmp.bitmap.data[p + 3];
+
+        let rgba = r;
+        rgba = (rgba << 8) + g;
+        rgba = (rgba << 8) + b;
+        rgba = (rgba << 8) + a;
+
+        pixels.push(rgba);
+    }
+
+    const hints = new Map();
+    const formats = [BarcodeFormat.EAN_13];
+    hints.set(DecodeHintType.POSSIBLE_FORMATS, formats);
+    const reader = new MultiFormatReader();
+    reader.setHints(hints);
+
+    const luminanceSource = new RGBLuminanceSource(
+        Int32Array.from(pixels),
+        bmp.bitmap.width,
+        bmp.bitmap.height
     );
+
+    const binaryBitmap = new BinaryBitmap(new HybridBinarizer(luminanceSource));
+
+    try {
+        const result = reader.decode(binaryBitmap);
+        fs.unlink(imagePathDest, () => {});
+        return result;
+    } catch (err) {
+        console.log(`[ERROR][500][barcodeReader => ${err}`);
+        fs.unlink(imagePathDest, () => {});
+        return false;
+    }
 };

@@ -8,16 +8,20 @@ module.exports = {
         if (!image)
             return res.status(404).send({ barcode: "Image is not defined" });
 
+        // download image
         const fileDownloaded = await download.barcodeDownload(image);
         if (!fileDownloaded)
             return res.status(500).send({ barcode: "BarCode read failed" });
 
+        // read barcode from image
         const code = await reader.barcodeReader(fileDownloaded);
+
+        // remove downloaded image
         await remove.barcodeRemove(fileDownloaded);
+
         if (!code)
             return res.status(500).send({ barcode: "BarCode read failed" });
-        code.then((code) => {
-            return res.status(200).send({ barcode: code });
-        });
+
+        return res.status(200).send({ barcode: code.text });
     },
 };
