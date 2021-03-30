@@ -26,18 +26,14 @@ module.exports.barcodeReader = async (image) => {
                 size: 800, // restrict input-size to be 800px in width (long-side)
             },
             decoder: {
-                readers: [
-                    {
-                        format: "ean_reader",
-                        config: {
-                            supplements: [
-                                "ean_13_reader",
-                                "ean_5_reader",
-                                "ean_2_reader",
-                            ],
-                        },
-                    },
-                ],
+                readers: ["code_128_reader"],
+                debug: {
+                    drawBoundingBox: false,
+                    showFrequency: false,
+                    drawScanline: false,
+                    showPattern: false,
+                },
+                multiple: false,
             },
         },
         (result) => {
