@@ -25,9 +25,11 @@ module.exports.barcodeReader = async (image) => {
     // convert image to bitmap
     const bmp = await Jimp.read(image)
         .then((bmp) => {
-            return bmp
-                .greyscale() // set greyscale
-                .write(imagePathDest); // save
+            return (
+                bmp
+                    //.greyscale() // set greyscale
+                    .write(imagePathDest)
+            ); // save
         })
         .catch((err) => {
             console.error(err);
