@@ -11,13 +11,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reinaldoalmeida/barcode.git"
+    "url": "git+https://github.com/reinaldoalmeida/barcode-reader.git"
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/reinaldoalmeida/barcode/issues"
+    "url": "https://github.com/reinaldoalmeida/barcode-reader/issues"
   },
-  "homepage": "https://github.com/reinaldoalmeida/barcode#readme",
+  "homepage": "https://github.com/reinaldoalmeida/barcode-reader#readme",
   "dependencies": {
     "@zxing/library": "^0.18.4",
     "dotenv": "^8.2.0",
