@@ -24,7 +24,7 @@
     "express": "^4.17.1",
     "ext-name": "^5.0.0",
     "jimp": "^0.16.1",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^3.2.10",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
